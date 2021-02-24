@@ -1,6 +1,6 @@
 module "diagnostic_policy" {
-  # source = "git::https://github.com/innovationnorway/platform-policies.git?ref=ts/diagnostic"
-  source = "C:/TF/Terraform Policies/platform-policies"
+  source = "git::https://github.com/innovationnorway/platform-policies.git?ref=ts/diagnostic"
+  # source = "C:/TF/Terraform Policies/platform-policies"
 
   root_policy_folder           = "policies"
   policy_type                  = "diagnostic"
