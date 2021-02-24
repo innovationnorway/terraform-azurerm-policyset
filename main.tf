@@ -1,26 +1,12 @@
-# resource "random_id" "main" {
-#   keepers = {
-#     # Generate a new id each time we change the name prefix
-#     name_prefix = var.name_prefix
-#   }
+module "diagnostic_policy" {
+  # source = "git::https://github.com/innovationnorway/platform-policies.git?ref=ts/diagnostic"
+  source = "C:/TF/Terraform Policies/platform-policies"
 
-#   byte_length = 4
-# }
-
-resource "azurerm_policy_definition" "policy" {
-  for_each = local.policy_json
-
-  name         = join("", [var.name_space, " - ", each.value.name])
-  display_name = join("", [var.name_space, " - ", each.value.properties.displayName])
-  policy_type  = each.value.properties.policyType
-  mode         = each.value.properties.mode
-  metadata     = jsonencode(each.value.properties.metadata)
-  policy_rule  = jsonencode(each.value.properties.policyRule)
-  parameters   = jsonencode(each.value.properties.parameters)
-
-  lifecycle {
-    ignore_changes = [
-      metadata
-    ]
-  }
+  root_policy_folder           = "policies"
+  policy_type                  = "diagnostic"
+  name_prefix                  = "Deploy-Prod"
+  policy_set_category          = "Monitoring"
+  policy_set_assignement_scope = "/providers/Microsoft.Management/managementGroups/innovationnorway"
+  policy_assignment_location   = "westeurope"
+  enforcement_mode             = false
 }

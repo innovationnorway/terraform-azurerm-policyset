@@ -1,32 +1,41 @@
-# variable "name_prefix" {
+# variable "root_policy_folder" {
 #   type        = string
-#   description = "Creates a unique name beginning with the specified prefix."
-
-#   validation {
-#     condition     = can(regex("^[a-z0-9-]{3,24}$", var.name_prefix))
-#     error_message = "The name_prefix value must be between 3 and 24 characters in length and use numbers, hyphen and lower-case letters only."
-#   }
+#   description = "Folder where policy files reside"
+#   default     = "policies"
 # }
 
-locals {
-  policy_files = fileset(var.policy_folder, "*.json")
-
-  policy_files_without_extension = [for p in local.policy_files : split(".", p)[0]]
-
-  policy_json = {
-    for policy in local.policy_files_without_extension :
-    policy => jsondecode(file(join("", [var.policy_folder, policy, ".json"])))
-  }
+variable "policy_type" {
+  type        = string
+  description = "Type of policies to set"
+  default     = "diagnostic"
 }
 
-variable "policy_folder" {
+variable "name_prefix" {
   type        = string
-  description = "Folder where policy files reside"
-  default     = "policies/"
-}
-
-variable "name_space" {
-  type        = string
-  description = "Naming of json files"
+  description = "Prefix for naming of policies in TF and Azure Portal"
   default     = "Deploy-Prod"
+}
+
+variable "policy_set_category" {
+  type        = string
+  description = "Defines which category the policy set should be in"
+  default     = "Monitoring"
+}
+
+variable "policy_set_assignement_scope" {
+  type        = string
+  description = "Set the scope to where the policy set should be assigned. Can be Management Group, Subscription or Resource Group."
+  default     = "/providers/Microsoft.Management/managementGroups/innovationnorway"
+}
+
+variable "policy_assignment_location" {
+  type        = string
+  description = "Location of Policy Assignment"
+  default     = "westeurope"
+}
+
+variable "enforcement_mode" {
+  type        = bool
+  description = "Should policy be enforced: true/false"
+  default     = "false"
 }
